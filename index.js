@@ -104,4 +104,29 @@ app.post("/signin", async (req, res) => {
   }
 });
 
+app.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.json({ error: "User Not Found" });
+  }
+//   const resetCode = nanoid(5).toUpperCase();
+//   user.resetCode = resetCode;
+//   user.save();
+//   const emailData = {
+//     from: process.env.EMAIL_FROM,
+//     to: user.email,
+//     subject: "Password reset code",
+//     html: `<h1>Your password  reset code is: ${resetCode}</h1>`,
+//   };
+  try {
+    // const data = await sgMail.send(emailData);
+    res.json({ result: true });
+  } catch (err) {
+    console.log(err);
+    res.json({ result: false });
+  }
+});
+
 app.listen(port, () => console.log("Server Running On Port 5000"));
