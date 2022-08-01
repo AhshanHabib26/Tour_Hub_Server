@@ -15,7 +15,6 @@ mongoose
   .then(() => console.log("DB connected"))
   .catch((err) => console.log("DB CONNECTION ERROR: ", err));
 
-
 // middlle Ware
 app.use(cors());
 app.use(express.json());
@@ -71,6 +70,37 @@ app.post("/signup", async (req, res) => {
     }
   } catch (err) {
     console.log(err);
+  }
+});
+
+app.post("signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({
+        error: "No user found",
+      });
+    }
+    const match = await comparePassword(password, user.password);
+    if (!match) {
+      return res.json({
+        error: "Wrong password",
+      });
+    }
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    user.password = undefined;
+    user.secret = undefined;
+    res.json({
+      token,
+      user,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Error. Try again.");
   }
 });
 
