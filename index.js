@@ -6,7 +6,7 @@ const app = express();
 const User = require("./user/user");
 const { hashPassword, comparePassword } = require("./helpers/helpers");
 const jwt = require("jsonwebtoken");
-const { json } = require("express");
+const port = process.env.PORT || 5000;
 
 const uri = `mongodb+srv://${process.env.DB_USER_NAME}:${process.env.DB_PASSWORD}@cluster0.nrtffnx.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -74,4 +74,4 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-app.listen(5000, () => console.log("Server Running On Port 5000"));
+app.listen(port, () => console.log("Server Running On Port 5000"));
